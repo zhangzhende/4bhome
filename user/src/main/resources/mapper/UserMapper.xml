@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzd.mybatis.UserMapper">
+    <resultMap id="user" type="com.zzd.bean.User">
+        <!--账号todo-->
+        <id property="bh" column="C_BH" jdbcType="CHAR" />
+        <!-- 审理法院 -->
+        <result property="slfy" column="C_SLFY" jdbcType="VARCHAR" />
+        <!-- 专题名称 -->
+        <result property="ztName" column="C_ZT_NAME" jdbcType="VARCHAR" />
+        <!-- 案由 -->
+        <result property="ay" column="C_AY" jdbcType="VARCHAR" />
+        <!-- 部门法  -->
+        <result property="bmfId" column="C_BMF_ID" jdbcType="VARCHAR" />
+        <!-- 热度 -->
+        <result property="rd" column="N_RD" jdbcType="INTEGER" />
+        <!-- 周期 -->
+        <result property="zq" column="N_ZQ" jdbcType="INTEGER" />
+        <!-- 关键词 -->
+        <result property="gjc" column="C_GJC" jdbcType="VARCHAR" />
+        <!-- 创建时间 -->
+        <result property="createTime" column="D_CREATE_TIME" jdbcType="TIMESTAMP" />
+        <!-- 删除标志位 -->
+        <result property="delmark" column="N_DELMARK" jdbcType="INTEGER" />
+        <!-- 摆渡标志位 -->
+        <result property="mark" column="N_MARK" jdbcType="INTEGER" />
+    </resultMap>
+
+    <update id="deleteZtCaseByBh" parameterType="java.lang.String">
+        update db_gzpt.T_ZT_CASE
+        set  N_DELMARK = '1'
+        where C_BH = #{bh}
+    </update>
+    <insert id="addZtCase" parameterType="com.thunisoft.sfalw.httpgs.model.ZtCase">
+        insert into db_gzpt.T_ZT_CASE (C_BH, C_SLFY, C_ZT_NAME, C_AY, C_BMF_ID, N_RD, N_ZQ, C_GJC, D_CREATE_TIME, N_DELMARK, N_MARK)
+        values (#{bh, jdbcType=CHAR}, #{slfy, jdbcType=VARCHAR}, #{ztName, jdbcType=VARCHAR}, #{ay, jdbcType=VARCHAR}, #{bmfId, jdbcType=VARCHAR}, #{rd, jdbcType=INTEGER}, #{zq, jdbcType=INTEGER}, #{gjc, jdbcType=VARCHAR}, #{createTime, jdbcType=TIMESTAMP}, #{delmark, jdbcType=INTEGER}, #{mark, jdbcType=INTEGER})
+    </insert>
+    <update id="updateZtCase" parameterType="com.thunisoft.sfalw.httpgs.model.ZtCase">
+        update {db.T_ZT_CASE}
+        set
+        C_SLFY = #{slfy, jdbcType=VARCHAR},
+        C_ZT_NAME = #{ztName, jdbcType=VARCHAR},
+        C_AY = #{ay, jdbcType=VARCHAR},
+        C_BMF_ID = #{bmfId, jdbcType=VARCHAR},
+        N_RD = #{rd, jdbcType=INTEGER},
+        N_ZQ = #{zq, jdbcType=INTEGER},
+        C_GJC = #{gjc, jdbcType=VARCHAR},
+        D_CREATE_TIME = #{createTime, jdbcType=TIMESTAMP},
+        N_DELMARK = #{delmark, jdbcType=INTEGER},
+        N_MARK = #{mark, jdbcType=INTEGER}
+        where C_BH = #{bh}
+    </update>
+    <select id="getZtCaseByBh" parameterType="java.lang.String" resultMap="ztCase">
+        select C_BH, C_SLFY, C_ZT_NAME, C_AY, C_BMF_ID, N_RD, N_ZQ, C_GJC, D_CREATE_TIME, N_DELMARK, N_MARK
+        from {db.T_ZT_CASE}
+        where C_BH = #{bh}
+    </select>
+    <select id="getZtCases" resultMap="ztCase">
+        select C_BH, C_SLFY, C_ZT_NAME, C_AY, C_BMF_ID, N_RD, N_ZQ, C_GJC, D_CREATE_TIME, N_DELMARK, N_MARK
+        from {db.T_ZT_CASE}
+    </select>
+    <select id="getZtCasesCount" resultType="int">
+        select count(*)
+        from {db.T_ZT_CASE}
+    </select>
+    <select id="getNewZtCases" resultMap="ztCase">
+        select C_BH, C_SLFY, C_ZT_NAME, C_AY, C_BMF_ID, N_RD, N_ZQ, C_GJC, D_CREATE_TIME, N_DELMARK, N_MARK
+        from db_gzpt.T_ZT_CASE where N_DELMARK='0'
+    </select>
+</mapper>
